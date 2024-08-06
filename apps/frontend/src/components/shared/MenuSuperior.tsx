@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Logo from './Logo'
 import MenuUsuario from './MenuUsuario'
-import useUsuario from '../../data/hooks/useUsuario'
+import useUsuario from '@/data/hooks/useUsuario'
 
 export default function MenuSuperior() {
     const { usuario } = useUsuario()

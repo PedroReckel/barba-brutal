@@ -3,11 +3,10 @@ import { PrismaService } from 'src/db/prisma.service';
 
 @Controller('servico')
 export class ServicoController {
-    
-    constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-    @Get()
-    buscarTodos() {
-        return this.prisma.servico.findMany();
-    }
+  @Get()
+  buscarTodos() {
+    return this.prisma.servico.findMany();
+  }
 }

@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import MenuSuperior from '../shared/MenuSuperior'
+import MenuSuperior from '@/components/shared/MenuSuperior'
 
 export default function TituloSlogan() {
     return (
