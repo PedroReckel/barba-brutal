@@ -1,11 +1,25 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { Profissional } from '@barba/core'
-import { useProfissionais } from '@barba/ui'
 import ProfissionalItem from '@/components/profissional/ProfissionalItem'
 import Titulo from '@/components/shared/Titulo'
 
 export default function NossosProfissionais() {
-    const { profissionais } = useProfissionais()
+    const [profissionais, setProfissionais] = useState([]);
+
+    useEffect(() => {
+        async function fetchProfissionais() {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profissional`);
+                const data = await response.json();
+                setProfissionais(data);
+            } catch (error) {
+                console.error(`Erro ao buscar os serviços: `, error);
+            }
+        }
+
+        fetchProfissionais();
+    }, []);
 
     return (
         <div className="container flex flex-col items-center gap-y-16">
@@ -20,5 +34,5 @@ export default function NossosProfissionais() {
                 ))}
             </div>
         </div>
-    )
+    );
 }

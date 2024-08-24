@@ -6,4 +6,5 @@ import { DbModule } from 'src/db/db.module';
   imports: [DbModule],
   controllers: [ServicoController],
 })
+
 export class ServicoModule {}

@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    container_name: barbabrutal_database
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_DB: barbabrutal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sysadmin
+    networks:
+      - barbabrutal-network
+    volumes:
+      - barbabrutal:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:sysadmin@barbabrutal_database:5432/barbabrutal
+    depends_on:
+      - postgres
+    networks:
+      - barbabrutal-network
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - barbabrutal-network
+
+  mobile:
+    build:
+      context: ./apps/mobile
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      NODE_ENV: development
+    networks:
+      - barbabrutal-network
+
+networks:
+  barbabrutal-network:
+    driver: bridge
+
+volumes:
+  barbabrutal:

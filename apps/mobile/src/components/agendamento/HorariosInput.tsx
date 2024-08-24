@@ -40,7 +40,7 @@ export default function HorariosInput(props: HorariosInputProps) {
         )
 
         const horaIndisponivel = periodoSelecionado.includes(horario)
-        const ocupado = horariosOcupados.includes(horario)
+        const ocupado = Array.isArray(horariosOcupados) && horariosOcupados.includes(horario);
 
         const getBotaoProps = () => {
             if (selecionado && !periodoBloqueado && !ocupado) {
