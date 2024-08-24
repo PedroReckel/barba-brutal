@@ -1,29 +1,30 @@
-# Use uma imagem base do Node.js
-FROM node:20-alpine
+# Use a Node.js base image
+FROM node:20-alpine AS build
 
-# Define o diretório de trabalho
+# Set working directory
 WORKDIR /app
 
-# Copia o arquivo de dependências
-COPY package*.json ./
-
-# Instala as dependências
-RUN yarn install
-
-# Instala o Nest CLI globalmente
-RUN yarn global add @nestjs/cli
-
-# Copia o módulo @barba/core para dentro do contêiner
-COPY /home/pedro/barba-brutal/package ./node_modules/@barba/core
-
-# Copia o código fonte
+# Copy the project files
 COPY . .
 
-# Compila o código TypeScript
+# Install dependencies
+RUN yarn install
+
+# Build the Nest.js application
 RUN yarn build
 
-# Exponha a porta da aplicação
+# Use a smaller Node.js image for production
+FROM node:20-alpine AS production
+
+# Set working directory
+WORKDIR /app
+
+# Copy the build output and node_modules from the build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+
+# Expose the port that your app runs on
 EXPOSE 3001
 
-# Comando para iniciar a aplicação
-CMD ["yarn", "start:prod"]
+# Start the application
+CMD ["node", "dist/main"]

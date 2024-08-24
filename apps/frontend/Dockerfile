@@ -1,23 +1,31 @@
-# Use uma imagem base do Node.js
-FROM node:20-alpine
+# Use a Node.js base image
+FROM node:20-alpine AS build
 
-# Define o diretório de trabalho
+# Set working directory
 WORKDIR /app
 
-# Copia o arquivo de dependências
-COPY package*.json ./
-
-# Instala as dependências
-RUN yarn install
-
-# Copia o código fonte
+# Copy the project files
 COPY . .
 
-# Compila o código Next.js
+# Install dependencies
+RUN yarn install
+
+# Build the Next.js application
 RUN yarn build
 
-# Exponha a porta da aplicação
+# Use a smaller Node.js image for production
+FROM node:20-alpine AS production
+
+# Set working directory
+WORKDIR /app
+
+# Copy the build output and node_modules from the build stage
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+
+# Expose the port that your app runs on
 EXPOSE 3000
 
-# Comando para iniciar a aplicação
+# Start the application
 CMD ["yarn", "start"]

@@ -1,23 +1,17 @@
-# Use uma imagem base do Node.js
+# Use a Node.js base image
 FROM node:20-alpine
 
-# Instale o expo-cli globalmente
-RUN npm install -g expo-cli
-
-# Define o diretório de trabalho
+# Set working directory
 WORKDIR /app
 
-# Copia o arquivo de dependências
-COPY package*.json ./
-
-# Instala as dependências
-RUN yarn install
-
-# Copia o código fonte
+# Copy the project files
 COPY . .
 
-# Exponha a porta da aplicação
-EXPOSE 19000 19001 19002
+# Install dependencies
+RUN yarn install
 
-# Comando para iniciar a aplicação Expo
-CMD ["yarn", "web"]
+# Expose the port Expo uses
+EXPOSE 8081
+
+# Start the Expo server
+CMD ["yarn", "start"]
